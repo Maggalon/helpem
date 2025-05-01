@@ -6,6 +6,7 @@ import { LocationData } from "@twa-dev/types";
 import Image from "next/image";
 import Link from "next/link";
 import { useContext } from "react";
+import { useRouter } from "next/navigation";
 
 
 export default function Page() {
@@ -13,6 +14,8 @@ export default function Page() {
   const context = useContext(TWAContext)
   const webApp = context?.webApp
   const setGeolocation = context?.setGeolocation
+
+  const router = useRouter()
 
   const handleClick = () => {
     try {
@@ -26,6 +29,7 @@ export default function Page() {
           }) 
         }
       }
+      router.push("/create")
     } catch(e) {
       alert(e)
     }
@@ -34,11 +38,11 @@ export default function Page() {
 
   return (
     <div className="relative h-screen w-full flex justify-center items-center">
-      <Link href={"/create"}>
+      {/* <Link href={"/create"}> */}
         <button onClick={handleClick} className="bg-sky-400 text-white font-bold w-72 py-4 rounded-lg shadow">
           Попросить помощь
         </button>
-      </Link>
+      {/* </Link> */}
       {/* <OpenLayersComponent />
       <div className="absolute bottom-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
         <Image src={"/pin.svg"} alt="pin" width={50} height={30} />
