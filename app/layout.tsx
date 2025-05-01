@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { BottomNavigation } from "@/components/bottom-navigation";
+import { TWAProvider } from "@/contexts/twa-context";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,8 +30,11 @@ export default function RootLayout({
       <body
         className={`h-full antialiased`}>
         <main className="h-view-container">
-          {children}
+          <TWAProvider>
+            {children}
+          </TWAProvider>
           <BottomNavigation />
+          <Script src="https://telegram.org/js/telegram-web-app.js" />
         </main>
       </body>
     </html>
