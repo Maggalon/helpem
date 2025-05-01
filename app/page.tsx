@@ -16,7 +16,9 @@ export default function Page() {
   const handleClick = () => {
     try {
       if (webApp?.LocationManager.isInited) {
+        alert("Location Manager is inited")
         if (webApp.LocationManager.isLocationAvailable) {
+          alert("Location Manager is available")
           webApp.LocationManager.openSettings() 
         }
         // webApp.LocationManager.getLocation((data: LocationData | null) => {
