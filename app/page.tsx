@@ -19,7 +19,7 @@ export default function Page() {
         webApp.LocationManager.openSettings() 
       }
       webApp.LocationManager.getLocation((data: LocationData | null) => {
-        console.log(data);
+        alert("LNG: " + data?.longitude + "; LAT: " + data?.latitude);
       })
     }
   }
