@@ -19,7 +19,9 @@ export default function Page() {
         alert("Location Manager is inited")
         if (webApp.LocationManager.isLocationAvailable) {
           alert("Location Manager is available")
-          webApp.LocationManager.openSettings() 
+          webApp.LocationManager.getLocation((data: LocationData | null) => {
+            alert("LNG: " + data?.longitude + "; LAT: " + data?.latitude);
+          }) 
         }
         // webApp.LocationManager.getLocation((data: LocationData | null) => {
         //   alert("LNG: " + data?.longitude + "; LAT: " + data?.latitude);
