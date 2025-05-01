@@ -18,6 +18,9 @@ export default function Page() {
     try {
       if (webApp?.LocationManager.isInited) {
         if (webApp.LocationManager.isLocationAvailable) {
+          if (webApp.LocationManager.isAccessRequested && !webApp.LocationManager.isAccessGranted) {
+            webApp.LocationManager.openSettings()
+          }
           webApp.LocationManager.getLocation((data: LocationData | null) => {
             if (data) setGeolocation!({lat: data.latitude, lng: data.longitude})
           }) 
