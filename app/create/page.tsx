@@ -1,9 +1,10 @@
 "use client"
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/select"
-import { ChevronLeft } from "lucide-react"
+import { TWAContext } from "@/contexts/twa-context"
+import { ChevronLeft, Locate, MapPin, Navigation } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
 
 
 const typeOptions = [
@@ -69,8 +70,17 @@ export default function Create() {
     const [selectedType, setSelectedType] = useState<string>("")
     const [selectedSubtype, setSelectedSubtype] = useState<string>("")
     const [comment, setComment] = useState<string>("")
+    const [centerAddress, setCenterAddress] = useState<string>('Загрузка...');
+    
+    const context = useContext(TWAContext)
+    const webApp = context?.webApp
+    const geolocation = context?.geolocation
 
     const router = useRouter()
+
+    useEffect(() => {
+        getAddressFromCoordinates(geolocation?.lng, geolocation?.lat)
+    }, [])
 
     // Get subtypes based on selected type
     const subtypes = typeOptions.find((type) => type.value === selectedType)?.subtypes || []
@@ -81,13 +91,45 @@ export default function Create() {
         setSelectedSubtype("")
     }
 
+    const getAddressFromCoordinates = async (lon: number | undefined, lat: number | undefined) => {
+        try {
+          // Using Nominatim's reverse geocoding service
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
+          );
+          const data = await response.json();
+          
+          if (data && data.display_name) {
+            setCenterAddress(data.display_name);
+            return data.display_name;
+          } else {
+            setCenterAddress('Address not found');
+            return 'Address not found';
+          }
+        } catch (error) {
+          console.error('Error fetching address:', error);
+          setCenterAddress('Error getting address');
+          return 'Error getting address';
+        }
+    };
+
     return(
         <>
         <div className="pt-3 pl-2 flex relative">
             <ChevronLeft onClick={() => router.back()} className="absolute left-2" />
             <span className="font-bold w-full text-center">Заполните детали проблемы</span>
         </div>
+
         <div className="space-y-6 p-5">
+            <div className="space-y-2">
+                <label className="text-md font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" htmlFor="Location">Местоположение</label>
+                <div className="py-1"></div>
+                <div className="w-full border p-2 rounded-md flex items-center gap-2">
+                    <MapPin />
+                    {centerAddress.split(',').slice(0,4).reverse().join(", ")}
+                </div>
+            </div>
+
             <div className="space-y-2">
                 <label className="text-md font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70" htmlFor="type">Тип проблемы</label>
                 <div className="py-1"></div>

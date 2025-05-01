@@ -1,7 +1,7 @@
 "use client"
 
 import { Telegram } from '@twa-dev/types';
-import { createContext, useEffect, useState } from 'react';
+import { createContext, Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 declare global {
     interface Window {
@@ -11,7 +11,8 @@ declare global {
 
 interface TWAContextProps {
     webApp: Telegram["WebApp"] | undefined;
-    geolocation: { lat: number, lng: number} | null | undefined;
+    geolocation: { lat: number, lng: number} | undefined;
+    setGeolocation: (geolocation: { lat: number; lng: number; }) => void;
 }
 
 export const TWAContext = createContext<TWAContextProps | undefined>(undefined)
@@ -19,7 +20,7 @@ export const TWAContext = createContext<TWAContextProps | undefined>(undefined)
 export const TWAProvider = ({ children }: Readonly<{children: React.ReactNode}>) => {
 
     const [webApp, setWebApp] = useState<Telegram["WebApp"]>()
-    const [geolocation, setGeolocation] = useState<{ lat: number, lng: number} | null>()
+    const [geolocation, setGeolocation] = useState<{ lat: number, lng: number}>()
 
     const getWebApp = async () => {
         const webApp = await waitForWebApp() as Telegram["WebApp"]
@@ -43,23 +44,23 @@ export const TWAProvider = ({ children }: Readonly<{children: React.ReactNode}>)
         });
     };
 
-    const getGeolocation = () => {
-        function success(pos: { coords: any; }) {
-          const crd = pos.coords;
+    // const getGeolocation = () => {
+    //     function success(pos: { coords: any; }) {
+    //       const crd = pos.coords;
           
-          setGeolocation({ lat: crd.latitude, lng: crd.longitude })
-        }
+    //       setGeolocation({ lat: crd.latitude, lng: crd.longitude })
+    //     }
     
-        navigator.geolocation.getCurrentPosition(success);
-    }
+    //     navigator.geolocation.getCurrentPosition(success);
+    // }
 
     useEffect(() => {
         getWebApp()
-        getGeolocation()
+        // getGeolocation()
     }, [])
 
     return (
-        <TWAContext.Provider value={{ webApp, geolocation }}>
+        <TWAContext.Provider value={{ webApp, geolocation, setGeolocation }}>
             {children}
         </TWAContext.Provider>
     )
