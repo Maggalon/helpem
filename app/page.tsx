@@ -16,12 +16,12 @@ export default function Page() {
   const handleClick = () => {
     try {
       if (webApp?.LocationManager.isInited) {
-        if (!webApp.LocationManager.isAccessGranted) {
+        if (webApp.LocationManager.isLocationAvailable) {
           webApp.LocationManager.openSettings() 
         }
-        webApp.LocationManager.getLocation((data: LocationData | null) => {
-          alert("LNG: " + data?.longitude + "; LAT: " + data?.latitude);
-        })
+        // webApp.LocationManager.getLocation((data: LocationData | null) => {
+        //   alert("LNG: " + data?.longitude + "; LAT: " + data?.latitude);
+        // })
       }
     } catch(e) {
       alert(e)
