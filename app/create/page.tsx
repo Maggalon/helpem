@@ -113,6 +113,25 @@ export default function Create() {
         }
     };
 
+    const handleConfirm = async () => {
+        const response = await fetch('/api/problem/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                type: selectedType,
+                subtype: selectedSubtype,
+                comment,
+                user_id: webApp?.initDataUnsafe.user?.id,
+                location: `POINT(${geolocation?.lng} ${geolocation?.lat})`
+            })
+        })
+
+        const data = await response.json()
+
+        if (data.success) alert("Problem successfully created")
+        else alert(data.error)
+    }
+
     return(
         <>
         <div className="pt-3 pl-2 flex relative">
@@ -176,7 +195,7 @@ export default function Create() {
                 />
             </div>
 
-            <button className="bg-sky-400 text-white font-bold w-full py-4 rounded-lg">Подтвердить</button>
+            <button onClick={handleConfirm} className="bg-sky-400 text-white font-bold w-full py-4 rounded-lg">Подтвердить</button>
         </div>
         </>
     )
