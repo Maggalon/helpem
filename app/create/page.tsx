@@ -129,7 +129,7 @@ export default function Create() {
         const data = await response.json()
 
         if (data.success) alert("Problem successfully created")
-        else alert(data)
+        else alert(JSON.stringify(data))
     }
 
     return(
